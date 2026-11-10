@@ -33,3 +33,36 @@ You are an engineering agent helping a team of 5 build a one-day hackathon app (
 - Language of lectures: default English (en-US / en-IN). Make locale configurable.
 - Default stack suggestion: Python 3.11, Streamlit (or FastAPI + small React front-end if the team prefers). See `02_ARCHITECTURE.md`.
 - Team number `T##` and team name are unknown; use placeholders and make them easy to replace.
+
+## Current build state
+
+Phases 1–4 of `ROADMAP.md` are built and **verified against the live Azure resources** (100 offline tests, no credentials needed for the suite): verification engine, Speech client, notes/key terms, Q&A gate, plus injection/PII screening. On a synthetic 36-second lecture clip: fast transcription returned 8 phrases and 98 word offsets in 3.8 s, notes kept 6 of 7 bullets and 5 of 5 key terms with computed timestamps, covered questions answered with clickable timestamps, and unrelated questions refused with the literal `Not covered in this lecture`. The Streamlit UI (`main.py`) shows the audio player, notes, key terms, transcript, Q&A and the verification report, with every timestamp a click-to-play chip (verified: the 0:19 chip seeks to 18.4 s and plays). The A1 WER cut and A2/A3 evidence still need the team's real clip.
+
+| Module | What it does |
+|---|---|
+| `app/transcript_index.py` | `norm()`, token index, word offsets with interpolation, key-term variants |
+| `app/verify.py` | `locate()` (exact → fuzzy → fail), coverage decision table, `seek_ms()` |
+| `app/audio.py` | extension/size/duration validation, SHA-256, duration probe |
+| `app/speech.py` | fast transcription, phrase lists, cache, retries, typed errors |
+| `app/llm.py` | Foundry chat with JSON mode, one repair retry, content-filter handling |
+| `app/notes.py` | notes + 5 key terms with verification and bounded regeneration |
+| `app/qa.py` | grounded answers, relevance gate, literal `Not covered in this lecture` |
+| `app/safety.py` | injection and PII flags, display masking |
+
+```bash
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install -r requirements.txt   # Windows Git Bash; use .venv/bin/python elsewhere
+.venv/Scripts/python.exe -m pytest -q                          # 100 offline tests
+.venv/Scripts/python.exe -m pytest -m integration -q           # live end-to-end (needs .env + a clip)
+.venv/Scripts/python.exe eval/run_eval.py --clip data/samples/clip1.m4a --all  # A1/A2/A3 numbers
+.venv/Scripts/python.exe -m streamlit run main.py               # the browser UI
+.venv/Scripts/python.exe -m app.pipeline data/samples/lecture.m4a  # whole pipeline on one clip
+.venv/Scripts/python.exe -m app.pipeline data/samples/lecture.m4a -q "What is gradient descent?"
+.venv/Scripts/python.exe -m app.verify "a quote to locate"     # prints the Evidence object
+```
+
+Everything above runs without `.env`: the Azure clients are only constructed when called, and the tests use fake transports. Live calls need the variables listed in `.env.example`; see `AZURE_SETUP_TEMP.md` for provisioning.
+
+**Next step: the team's recorded clip and script.** The pipeline is live-verified on a synthetic clip only, so A1 (WER against the spoken script), the 2-minute A1 cut, and the A2/A3 screenshots cannot be produced until that audio exists. Until then the UI is developed against the cached transcript in `data/cache/`.
+
+`ROADMAP.md` is the build order. `docs/DECISIONS.md` records departures from the planning docs.

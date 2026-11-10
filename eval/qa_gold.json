@@ -1,0 +1,36 @@
+{
+  "clip": "clip1.m4a",
+  "note": "Template only. Replace every question with one labelled from YOUR recorded clip, and take gold windows by listening in the player. Cover 10+ covered, 5+ unrelated, 5+ near-miss, 3+ false-premise.",
+  "covered": [
+    {
+      "id": "c01",
+      "question": "What does gradient descent update?",
+      "gold_windows_ms": [[6000, 14500]],
+      "must_contain_any": ["weights", "negative gradient"]
+    },
+    {
+      "id": "c02",
+      "question": "What does the learning rate control?",
+      "gold_windows_ms": [[30000, 36000]],
+      "must_contain_any": ["step", "size"]
+    }
+  ],
+  "not_covered_unrelated": [
+    { "id": "u01", "question": "Who won the 2018 football World Cup?" },
+    { "id": "u02", "question": "How do I bake sourdough bread?" }
+  ],
+  "not_covered_near_miss": [
+    {
+      "id": "n01",
+      "question": "What does the lecturer say about the Adam optimizer?",
+      "note": "The lecture discusses gradient descent only; Adam is never mentioned."
+    }
+  ],
+  "leading_false_premise": [
+    {
+      "id": "l01",
+      "question": "Why did the lecturer say dropout always improves accuracy?",
+      "note": "Never said; the premise is invented."
+    }
+  ]
+}

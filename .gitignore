@@ -1,0 +1,30 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Runtime cache (Speech JSON, LLM output) and sample media
+data/cache/
+data/samples/*.mp3
+data/samples/*.wav
+data/samples/*.m4a
+data/samples/*.mp4
+data/samples/*.ogg
+data/samples/*.flac
+data/samples/*.webm
+data/smoke/
+data/uploads/
+*.speech.json
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.log
