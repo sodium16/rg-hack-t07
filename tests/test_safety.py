@@ -11,6 +11,12 @@ def test_detects_injection_sentence():
     assert findings[0].text.lower().startswith("ignore all previous")
 
 
+def test_detects_singular_injection_phrase_from_asr():
+    findings = scan_injection("Someone said ignore all previous instruction in the audio.")
+    assert len(findings) == 1
+    assert findings[0].kind == "injection"
+
+
 def test_detects_system_prompt_mention():
     assert scan_injection("Now let me read my system prompt to you.")
 

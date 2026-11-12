@@ -1,68 +1,177 @@
-# P11 · Lecture to Revision Notes — Agent Starter Pack
-
-You are an engineering agent helping a team of 5 build a one-day hackathon app (AI-103 Hackathon, problem P11). Read these files **in order** before writing code.
-
-| # | File | Read it for |
-|---|------|-------------|
-| 0 | `00_PROJECT_BRIEF.md` | The problem, rules, deliverables, scoring. Non-negotiables. |
-| 1 | `01_VISION_AND_DIFFERENTIATORS.md` | **What makes us win.** The "Trust Layer" idea and every standout feature. |
-| 2 | `02_ARCHITECTURE.md` | Pipeline, components, data contracts, tech options (flexible). |
-| 3 | `03_FEATURE_SPECS.md` | Each feature with behaviour and acceptance criteria. |
-| 4 | `04_VERIFICATION_ENGINE.md` | The core grounding/verification algorithm (the heart of the project). |
-| 5 | `05_PROMPTS.md` | Starting prompts and JSON schemas for the Foundry model. |
-| 6 | `06_SAFETY_COST_ENGINEERING.md` | Safety, privacy, secrets, cost control, error handling. |
-| 7 | `07_TESTING_AND_EVIDENCE.md` | A1/A2/A3 tests, metrics, eval harness, Evidence Sheet material. |
-| 8 | `08_DEMO_SCRIPT.md` | The 5-minute demo video, second by second. |
-| 9 | `09_TASK_PLAN.md` | Milestones, team split, backlog, definition of done. |
-
-## One-line pitch (keep this in mind for every decision)
+# P11 · Lecture to Revision Notes
 
 > **"Every sentence this app shows you can be traced to a second in your lecture, or it doesn't show it."**
 
-## Guiding principles
+An AI-powered revision study tool built for the **AI-103 Hackathon (Problem P11)**. A student uploads a 5–10 minute lecture recording and gets:
+1. A **timestamped transcript** with word-level precision.
+2. A **one-page set of revision notes** (≤ 400 words) where every bullet carries a verified timestamp.
+3. **Exactly 5 key terms** with definitions quoted directly from the lecture and asserted against the transcript.
+4. A **grounded Q&A box** that answers with a clickable timestamp chip or deterministically returns `"Not covered in this lecture"`.
+5. An interactive **click-to-play audio player** that jumps to 1 second before the relevant spoken sentence.
+6. A **Verification Report** detailing kept vs. dropped claims, token usage, and safety findings.
 
-1. **Grounded and checked beats clever.** Verified in code, not just prompted.
-2. **Never fake or hard-code results.** It disqualifies the team from the top 3.
-3. **Measured beats claimed.** Numbers (WER, timestamp error, not-covered rate) go in the Evidence Sheet.
-4. **Tech is flexible, contracts are not.** Pick any language/framework, but the services in "Must use" and the data contracts in `02_ARCHITECTURE.md` stay.
-5. **Demo-ability.** If a feature cannot be shown in the 5-minute video, it scores nothing. Build for the demo.
-6. **No secrets, ever.** Keys live in environment variables only.
+---
 
-## Assumptions to confirm with the team (don't block on them, pick defaults)
+## Architecture & Trust Layer
 
-- Language of lectures: default English (en-US / en-IN). Make locale configurable.
-- Default stack suggestion: Python 3.11, Streamlit (or FastAPI + small React front-end if the team prefers). See `02_ARCHITECTURE.md`.
-- Team number `T##` and team name are unknown; use placeholders and make them easy to replace.
+Unlike standard RAG or basic prompt wrappers that trust model-emitted timestamps or hallucinated facts, this project implements a strict **Trust Layer**:
 
-## Current build state
-
-Phases 1–4 of `ROADMAP.md` are built and **verified against the live Azure resources** (100 offline tests, no credentials needed for the suite): verification engine, Speech client, notes/key terms, Q&A gate, plus injection/PII screening. On a synthetic 36-second lecture clip: fast transcription returned 8 phrases and 98 word offsets in 3.8 s, notes kept 6 of 7 bullets and 5 of 5 key terms with computed timestamps, covered questions answered with clickable timestamps, and unrelated questions refused with the literal `Not covered in this lecture`. The Streamlit UI (`main.py`) shows the audio player, notes, key terms, transcript, Q&A and the verification report, with every timestamp a click-to-play chip (verified: the 0:19 chip seeks to 18.4 s and plays). The A1 WER cut and A2/A3 evidence still need the team's real clip.
-
-| Module | What it does |
-|---|---|
-| `app/transcript_index.py` | `norm()`, token index, word offsets with interpolation, key-term variants |
-| `app/verify.py` | `locate()` (exact → fuzzy → fail), coverage decision table, `seek_ms()` |
-| `app/audio.py` | extension/size/duration validation, SHA-256, duration probe |
-| `app/speech.py` | fast transcription, phrase lists, cache, retries, typed errors |
-| `app/llm.py` | Foundry chat with JSON mode, one repair retry, content-filter handling |
-| `app/notes.py` | notes + 5 key terms with verification and bounded regeneration |
-| `app/qa.py` | grounded answers, relevance gate, literal `Not covered in this lecture` |
-| `app/safety.py` | injection and PII flags, display masking |
-
-```bash
-python -m venv .venv
-.venv/Scripts/python.exe -m pip install -r requirements.txt   # Windows Git Bash; use .venv/bin/python elsewhere
-.venv/Scripts/python.exe -m pytest -q                          # 100 offline tests
-.venv/Scripts/python.exe -m pytest -m integration -q           # live end-to-end (needs .env + a clip)
-.venv/Scripts/python.exe eval/run_eval.py --clip data/samples/clip1.m4a --all  # A1/A2/A3 numbers
-.venv/Scripts/python.exe -m streamlit run main.py               # the browser UI
-.venv/Scripts/python.exe -m app.pipeline data/samples/lecture.m4a  # whole pipeline on one clip
-.venv/Scripts/python.exe -m app.pipeline data/samples/lecture.m4a -q "What is gradient descent?"
-.venv/Scripts/python.exe -m app.verify "a quote to locate"     # prints the Evidence object
+```
+Audio Upload (5–10 min)
+         │
+         ▼
+[Azure AI Speech] ──► Fast Transcription (api-version=2025-10-15)
+         │            Cached by audio SHA-256 (phrases + word offsets)
+         ▼
+[Transcript Index] ──► Token normalisation, word-level offsets, interpolation
+         │
+         ▼
+[Azure Foundry] ──► Chat Model (JSON mode): drafts notes, key terms, answers + verbatim quotes
+         │
+         ▼
+[Verification Engine] ──► Locates model quotes in the transcript index (Exact ➔ Fuzzy sliding window)
+         │                • Dropped unverified bullets/terms never reach the student
+         │                • Key terms asserted to literally appear in the transcript
+         │                • Coverage Gate: Quote verified AND relevance check passed
+         ▼
+[Streamlit Frontend] ──► Notes, 5 Key Terms, Transcript (w/ PII masking), Q&A, Click-to-Play Player
 ```
 
-Everything above runs without `.env`: the Azure clients are only constructed when called, and the tests use fake transports. Live calls need the variables listed in `.env.example`; see `AZURE_SETUP_TEMP.md` for provisioning.
+- **Timestamps are computed in code:** The model only provides verbatim quotes; `verify.py` searches the Speech token index to find exact millisecond offsets (`start_ms - 1000`).
+- **Unverified content is discarded:** If a bullet or term cannot be grounded in the transcript, it is pruned and recorded in the Verification Report.
+- **`Not covered in this lecture` is a code decision:** A question without a verified supporting quote is refused by code, preventing hallucinated answers on out-of-scope or near-miss topics.
 
-**Next step: the team's recorded clip and script.** The pipeline is live-verified on a synthetic clip only, so A1 (WER against the spoken script), the 2-minute A1 cut, and the A2/A3 screenshots cannot be produced until that audio exists. Until then the UI is developed against the cached transcript in `data/cache/`.
+---
 
-`ROADMAP.md` is the build order. `docs/DECISIONS.md` records departures from the planning docs.
+## Measured Acceptance Results (A1, A2, A3)
+
+Evaluated against the team's real lecture recording (`clip1.mp3`, 5:13, 881 words) using [`eval/run_eval.py`](file:///f:/Documents/Projects/rg-hack-t07/eval/run_eval.py):
+
+| Test | Metric | Target | Result | Verdict |
+|---|---|---|---|---|
+| **A1** | Word Error Rate (WER) vs. spoken script (`0–100s`) | ≤ 10% | **1.50%** (263/267 words matched) | **PASS** |
+| **A1** | Timestamps monotonic and within audio | 100% | **True** | **PASS** |
+| **A2** | Answer timestamp lands within ±5s of gold window | ≥ 90% | **10/10 (100%)** | **PASS** |
+| **A2** | Answer correctness | 100% | **10/10 (100%)** | **PASS** |
+| **A3** | Unrelated questions refused (`"Not covered in this lecture"`) | 100% | **5/5 (100%)** | **PASS** |
+| **A3** | Near-miss questions refused (`"Not covered in this lecture"`) | ≥ 90% | **5/5 (100%)** | **PASS** |
+| **A3** | False-premise questions refused | 100% | **3/3 (100%)** | **PASS** |
+| **A3** | Exactly 5 key terms present in transcript | 100% | **5/5 present (100%)** | **PASS** |
+
+Detailed machine-readable metrics are located in `eval/results/` (`a1_wer.json`, `a2_timestamps.json`, `a3_notcovered.json`, `a3_keyterms.json`, and `summary.md`).
+
+---
+
+## Engineering, Safety & Cost Controls
+
+1. **Content Filtering:** Azure Foundry content filter is active. Handled in `app/llm.py` by trapping `finish_reason == "content_filter"` and displaying a user-friendly notification.
+2. **Prompt Injection Resilience:** Tested on `clip2.mp3` with a planted injection (*"ignore all previous instructions..."*). Transcripts are isolated as data in prompts, the injection phrase is detected and flagged in the Verification tab, and notes/answers remain truthful.
+3. **Personal Data (PII) Masking:** Spoken phone numbers and email addresses are scanned in `app/safety.py`. The UI includes a **"Mask personal details"** toggle that redacts sensitive text from display while preserving underlying verification truth.
+4. **Zero Secret Leakage:** All secrets are loaded from environment variables (`.env`). `.env` is gitignored; `.env.example` provides clean placeholders.
+5. **Cost Optimization:**
+   - Azure Speech outputs are cached locally under `data/cache/<sha256>.speech.json`. Repeat runs and demo checks are instant and free.
+   - Strict `max_tokens` limits and structured JSON schemas minimize token consumption.
+
+---
+
+## Repository Structure
+
+```
+rg-hack-t07/
+├── app/                        # Core backend modules
+│   ├── audio.py                # Audio validation, duration probe, SHA-256 hashing
+│   ├── config.py               # Environment configuration and tunable thresholds
+│   ├── language.py             # Normalisation, token stemming, and content-word overlap
+│   ├── llm.py                  # Azure Foundry client (JSON mode, error handling, retries)
+│   ├── models.py               # Frozen data contracts (Transcript, Evidence, QAResult, etc.)
+│   ├── net.py                  # Resilient HTTP transport with exponential backoff & redaction
+│   ├── notes.py                # Notes and 5 key terms generation with verification loop
+│   ├── pipeline.py             # CLI pipeline runner
+│   ├── prompts.py              # System prompts, JSON schemas, and few-shot formatting
+│   ├── qa.py                   # Grounded Q&A with relevance gate and refusal decision
+│   ├── safety.py               # Prompt injection and PII scanning & masking
+│   ├── speech.py               # Azure AI Speech fast transcription REST client
+│   ├── transcript_index.py     # Token index, word offset interpolation, term matching
+│   └── verify.py               # Quote location (exact -> sliding window fuzzy match)
+├── data/
+│   ├── cache/                  # SHA-256 speech cache (makes repeat runs instant)
+│   └── samples/                # Sample lecture audio clips (clip1.mp3, clip2.mp3)
+├── docs/
+│   └── DECISIONS.md            # Architecture decision records and real-world findings
+├── eval/
+│   ├── clip1_a1_2min.txt       # Spoken reference script for A1 WER slice
+│   ├── clip1_script.txt        # Full reference script for Clip 1
+│   ├── clip2_script.txt        # Full reference script for Clip 2
+│   ├── qa_gold.json            # Gold Q&A evaluation benchmark
+│   ├── results/                # Machine-readable evaluation outputs and summary
+│   └── run_eval.py             # Full evaluation harness (A1, A2, A3)
+├── tests/                      # Pytest test suite (101 unit tests + integration smoke tests)
+├── .env.example                # Example environment variables
+├── .gitignore                  # Git ignore rules (secrets, venv, temporary cache)
+├── main.py                     # Streamlit web application
+├── pytest.ini                  # Pytest configuration
+└── requirements.txt            # Python dependencies
+```
+
+---
+
+## Quickstart Guide
+
+### 1. Prerequisites
+- Python 3.11+ (tested on Python 3.13)
+- An active Azure AI Speech resource and Azure AI Foundry project deployment
+
+### 2. Setup Virtual Environment
+```bash
+# Clone the repository
+git clone <repo-url>
+cd rg-hack-t07
+
+# Create and activate virtual environment
+python -m venv .venv
+# On Windows (PowerShell / Command Prompt):
+.venv\Scripts\activate
+# On Linux / macOS:
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 3. Environment Configuration
+Copy `.env.example` to `.env` and fill in your Azure credentials:
+```bash
+cp .env.example .env
+```
+Fill in the following variables:
+```env
+AZURE_SPEECH_KEY=your_azure_speech_key
+AZURE_SPEECH_REGION=your_speech_region
+AZURE_SPEECH_LOCALE=en-US
+AZURE_FOUNDRY_ENDPOINT=https://your-resource.services.ai.azure.com/
+AZURE_FOUNDRY_KEY=your_foundry_key
+AZURE_FOUNDRY_DEPLOYMENT=gpt-4.1-mini
+AZURE_FOUNDRY_API_VERSION=2025-04-14
+```
+
+### 4. Running the Web Application
+Launch the Streamlit UI:
+```bash
+streamlit run main.py
+```
+Open your browser at `http://localhost:8501`.
+- Choose `data/samples/clip1.mp3` or `data/samples/clip2.mp3` from the dropdown, or upload your own audio file.
+- Navigate the tabs: **Notes**, **Key terms**, **Transcript**, **Ask**, and **Verification**.
+- Click any **`▶ m:ss`** chip to seek the player and hear the exact second of audio.
+
+### 5. Running the Tests & Evaluation
+```bash
+# Run the offline test suite (101 unit tests, ~1s, requires no credentials)
+pytest -q
+
+# Run live end-to-end integration tests (requires .env)
+pytest -m integration -q
+
+# Run full evaluation suite (A1, A2, A3 benchmarks)
+python eval/run_eval.py --clip data/samples/clip1.mp3 --all --a1-script eval/clip1_a1_2min.txt --a1-range 0 100
+```

@@ -24,8 +24,8 @@ from app.transcript_index import TranscriptIndex
 pytestmark = pytest.mark.integration
 
 ROOT = Path(__file__).resolve().parent.parent
-CLIP = Path(os.environ.get("SMOKE_CLIP", ROOT / "data" / "smoke" / "sapi_lecture.wav"))
-QUESTION = os.environ.get("SMOKE_QUESTION", "What is the learning rate?")
+CLIP = Path(os.environ.get("SMOKE_CLIP", ROOT / "data" / "samples" / "clip1.mp3"))
+QUESTION = os.environ.get("SMOKE_QUESTION", "What does the learning rate control?")
 UNRELATED = "Who won the 2022 World Cup?"
 
 

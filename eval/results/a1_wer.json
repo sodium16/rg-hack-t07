@@ -1,0 +1,17 @@
+{
+  "wer": 0.015,
+  "substitutions": 4,
+  "insertions": 0,
+  "deletions": 0,
+  "hits": 263,
+  "reference_words": 267,
+  "hypothesis_words": 267,
+  "phrases": 16,
+  "timestamps_monotonic": true,
+  "timestamps_within_audio": true,
+  "passed": true,
+  "window_seconds": [
+    0,
+    100
+  ]
+}

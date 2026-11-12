@@ -1,0 +1,10 @@
+Welcome everyone to today's short lecture on supervised machine learning and how models learn from errors using gradient descent.
+
+Let us start with the core definition. Supervised learning is a branch of machine learning where a model learns a mapping from input features to known output labels using a labelled dataset. Every example in that dataset has two parts: the features, which are the measurable inputs such as house size or number of bedrooms, and the label, which is the true answer we want the model to predict, such as the sale price.
+
+When the model starts training, its internal parameters—which we usually call weights—are initialized to small random numbers. Because the weights start out random, the model's initial predictions are almost always wrong. To measure how wrong those predictions are, we define a loss function. A loss function is a mathematical formula that takes the model's predicted value and the true label, and outputs a single non-negative number representing the prediction error.
+
+One of the most common loss functions for predicting continuous numbers is mean squared error. Mean squared error works by taking the difference between each predicted value and the actual value, squaring that difference so positive and negative errors do not cancel out, and then averaging those squared errors across all training examples.
+
+A small loss means the predictions are close to the ground truth, while a large loss means the model is making big mistakes. Therefore, the goal of training a supervised model is straightforward: find the set of weights that minimizes the loss function across the entire training set.
+

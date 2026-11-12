@@ -16,11 +16,11 @@ import re
 from dataclasses import dataclass
 
 INJECTION_PATTERNS = (
-    r"ignore (?:all |any )?(?:the )?(?:previous|prior|above) instructions",
-    r"disregard (?:all |any )?(?:the )?(?:previous|prior|above) (?:instructions|rules)",
+    r"ignore (?:all |any )?(?:the )?(?:previous|prior|above) instructions?",
+    r"disregard (?:all |any )?(?:the )?(?:previous|prior|above) (?:instructions?|rules?)",
     r"system prompt",
     r"you are now",
-    r"reveal (?:your|the) (?:prompt|instructions|system)",
+    r"reveal (?:your|the) (?:prompt|instructions?|system)",
     r"forget (?:everything|all) (?:you|above)",
     r"jailbreak",
 )

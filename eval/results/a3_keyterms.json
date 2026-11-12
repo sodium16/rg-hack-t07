@@ -1,0 +1,48 @@
+{
+  "terms": [
+    {
+      "term": "Supervised learning",
+      "present_in_transcript": true,
+      "timestamp_ms": 10350,
+      "definition": "A branch of machine learning where a model learns a mapping from input features to known output labels using a labeled dataset."
+    },
+    {
+      "term": "Loss function",
+      "present_in_transcript": true,
+      "timestamp_ms": 51280,
+      "definition": "A mathematical formula that takes the model's predicted value and the true label and outputs a single non-negative number representing the prediction error."
+    },
+    {
+      "term": "Gradient descent",
+      "present_in_transcript": true,
+      "timestamp_ms": 122260,
+      "definition": "An iterative optimization algorithm that updates the model's weights step by step in the direction that reduces the loss function the fastest."
+    },
+    {
+      "term": "Mean squared error",
+      "present_in_transcript": true,
+      "timestamp_ms": 61610,
+      "definition": "A loss function for continuous predictions averaging squared differences between predicted and actual values."
+    },
+    {
+      "term": "Learning rate",
+      "present_in_transcript": true,
+      "timestamp_ms": 170030,
+      "definition": "A hyperparameter controlling the size of the step taken during each weight update in gradient descent."
+    }
+  ],
+  "summary": {
+    "terms": 5,
+    "all_present": true,
+    "notes_verified": 12,
+    "notes_generated": 12,
+    "terms_dropped": 3,
+    "regenerated": false,
+    "usage": {
+      "completion_tokens": 1781,
+      "prompt_tokens": 1694,
+      "total_tokens": 3475
+    },
+    "passed": true
+  }
+}

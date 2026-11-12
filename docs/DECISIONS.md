@@ -2,6 +2,11 @@
 
 Newest first. Keep entries short: what changed, why, and what it affects.
 
+## 2026-11-11 — Real-clip eval adjustments
+
+- **Raised `llm_max_tokens` from `1600` to `4096` (`app/config.py`).** On the 5-minute `clip1.mp3` lecture (49 phrases), notes + quotes + 8 key-term candidates required `1868` completion tokens and truncated mid-JSON at `1600`. `4096` gives headroom up to the 10-minute cap without mid-JSON cuts.
+- **Made `instructions?` / `rules?` optional-plural in `app/safety.py`.** Live Azure Speech transcribed `"ignore all previous instructions"` on `clip2.mp3` as `"ignore all previous instruction"` (singular). Allowing `s?` catches natural ASR inflection variance without broadening false positives.
+
 ## 2026-11-10 — Eval harness, integration test and UI trust details
 
 - **Evaluation lives in `eval/run_eval.py` and imports `app/` read-only.** Gold questions, reference scripts and results sit under `eval/`, never in `app/`, per `07_TESTING_AND_EVIDENCE.md`; nothing in the product can leak an expected answer. Flags: `--clip`, `--transcript`, `--a1`, `--a2`, `--a3`, `--all`, `--refresh`, `--a1-range`. It writes a1/a2/a3 JSON plus `summary.md`, and exits non-zero when a target fails so it can gate a submission.

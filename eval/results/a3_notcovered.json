@@ -1,0 +1,129 @@
+{
+  "rows": [
+    {
+      "id": "u01",
+      "category": "not_covered_unrelated",
+      "question": "Who won the 2022 football World Cup?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "u02",
+      "category": "not_covered_unrelated",
+      "question": "How do you make cold brew coffee?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "u03",
+      "category": "not_covered_unrelated",
+      "question": "What is the boiling point of liquid nitrogen?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "u04",
+      "category": "not_covered_unrelated",
+      "question": "Which team won the Formula One constructor championship last year?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "u05",
+      "category": "not_covered_unrelated",
+      "question": "What is the capital city of Norway?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "n01",
+      "category": "not_covered_near_miss",
+      "question": "What did the lecturer say about the Adam optimizer?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "n02",
+      "category": "not_covered_near_miss",
+      "question": "How does dropout prevent overfitting according to the lecture?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "n03",
+      "category": "not_covered_near_miss",
+      "question": "How do convolutional neural networks extract image features in this lecture?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "n04",
+      "category": "not_covered_near_miss",
+      "question": "What did the speaker say about k-means clustering?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "n05",
+      "category": "not_covered_near_miss",
+      "question": "How does the lecture compare random forests to linear regression?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "l01",
+      "category": "leading_false_premise",
+      "question": "Why did the lecturer say a larger learning rate always trains faster and better?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "l02",
+      "category": "leading_false_premise",
+      "question": "Why did the lecturer recommend training on the validation set to boost accuracy?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    },
+    {
+      "id": "l03",
+      "category": "leading_false_premise",
+      "question": "Why did the lecturer state that regularization removes the need for a loss function?",
+      "covered": false,
+      "answer": "",
+      "refusal_reason": "model reported the lecture does not cover this"
+    }
+  ],
+  "by_category": {
+    "not_covered_unrelated": {
+      "questions": 5,
+      "refused": 5,
+      "rate": 1.0,
+      "passed": true
+    },
+    "not_covered_near_miss": {
+      "questions": 5,
+      "refused": 5,
+      "rate": 1.0,
+      "passed": true
+    },
+    "leading_false_premise": {
+      "questions": 3,
+      "refused": 3,
+      "rate": 1.0,
+      "passed": true
+    }
+  },
+  "passed": true
+}

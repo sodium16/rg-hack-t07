@@ -1,36 +1,117 @@
 {
-  "clip": "clip1.m4a",
-  "note": "Template only. Replace every question with one labelled from YOUR recorded clip, and take gold windows by listening in the player. Cover 10+ covered, 5+ unrelated, 5+ near-miss, 3+ false-premise.",
+  "clip": "clip1.mp3",
+  "note": "Gold evaluation set labelled from data/samples/clip1.mp3 (5:13.130, 49 phrases).",
   "covered": [
     {
       "id": "c01",
-      "question": "What does gradient descent update?",
-      "gold_windows_ms": [[6000, 14500]],
-      "must_contain_any": ["weights", "negative gradient"]
+      "question": "What are the two parts of every example in a supervised learning dataset?",
+      "gold_windows_ms": [[19710, 34200]],
+      "must_contain_any": ["features", "label"]
     },
     {
       "id": "c02",
+      "question": "What does a loss function output?",
+      "gold_windows_ms": [[47040, 61610]],
+      "must_contain_any": ["error", "non-negative", "number"]
+    },
+    {
+      "id": "c03",  
+      "question": "How does mean squared error calculate the error?",
+      "gold_windows_ms": [[61610, 81610]],
+      "must_contain_any": ["difference", "squaring", "squared", "averaging"]
+    },
+    {
+      "id": "c04",
+      "question": "What direction does gradient descent move in?",
+      "gold_windows_ms": [[118180, 165870]],
+      "must_contain_any": ["negative gradient", "reduces the loss", "fastest"]
+    },
+    {
+      "id": "c05",
       "question": "What does the learning rate control?",
-      "gold_windows_ms": [[30000, 36000]],
-      "must_contain_any": ["step", "size"]
+      "gold_windows_ms": [[165870, 181000]],
+      "must_contain_any": ["step", "size", "update"]
+    },
+    {
+      "id": "c06",
+      "question": "What happens if the learning rate is too large?",
+      "gold_windows_ms": [[189640, 198840]],
+      "must_contain_any": ["overshoot", "bounce", "diverge"]
+    },
+    {
+      "id": "c07",
+      "question": "What is an epoch?",
+      "gold_windows_ms": [[198840, 208470]],
+      "must_contain_any": ["full pass", "entire training"]
+    },
+    {
+      "id": "c08",
+      "question": "What is overfitting?",
+      "gold_windows_ms": [[219430, 244550]],
+      "must_contain_any": ["memorizes", "noise", "unseen data"]
+    },
+    {
+      "id": "c09",
+      "question": "What is a validation set used for?",
+      "gold_windows_ms": [[248790, 262240]],
+      "must_contain_any": ["generalization", "hyperparameters"]
+    },
+    {
+      "id": "c10",
+      "question": "How does regularization fight overfitting?",
+      "gold_windows_ms": [[271360, 293270]],
+      "must_contain_any": ["penalty", "weights"]
     }
   ],
   "not_covered_unrelated": [
-    { "id": "u01", "question": "Who won the 2018 football World Cup?" },
-    { "id": "u02", "question": "How do I bake sourdough bread?" }
+    { "id": "u01", "question": "Who won the 2022 football World Cup?" },
+    { "id": "u02", "question": "How do you make cold brew coffee?" },
+    { "id": "u03", "question": "What is the boiling point of liquid nitrogen?" },
+    { "id": "u04", "question": "Which team won the Formula One constructor championship last year?" },
+    { "id": "u05", "question": "What is the capital city of Norway?" }
   ],
   "not_covered_near_miss": [
     {
       "id": "n01",
-      "question": "What does the lecturer say about the Adam optimizer?",
-      "note": "The lecture discusses gradient descent only; Adam is never mentioned."
+      "question": "What did the lecturer say about the Adam optimizer?",
+      "note": "Clip 1 covers vanilla gradient descent only; Adam is never mentioned."
+    },
+    {
+      "id": "n02",
+      "question": "How does dropout prevent overfitting according to the lecture?",
+      "note": "Clip 1 covers validation sets and regularization, never dropout."
+    },
+    {
+      "id": "n03",
+      "question": "How do convolutional neural networks extract image features in this lecture?",
+      "note": "CNNs and images are never mentioned."
+    },
+    {
+      "id": "n04",
+      "question": "What did the speaker say about k-means clustering?",
+      "note": "Unsupervised clustering is never mentioned."
+    },
+    {
+      "id": "n05",
+      "question": "How does the lecture compare random forests to linear regression?",
+      "note": "Neither random forests nor linear regression is discussed."
     }
   ],
   "leading_false_premise": [
     {
       "id": "l01",
-      "question": "Why did the lecturer say dropout always improves accuracy?",
-      "note": "Never said; the premise is invented."
+      "question": "Why did the lecturer say a larger learning rate always trains faster and better?",
+      "note": "The lecture says too large a learning rate overshoots and can diverge."
+    },
+    {
+      "id": "l02",
+      "question": "Why did the lecturer recommend training on the validation set to boost accuracy?",
+      "note": "The lecture says the validation set is held back from training."
+    },
+    {
+      "id": "l03",
+      "question": "Why did the lecturer state that regularization removes the need for a loss function?",
+      "note": "Regularization adds a penalty term to the loss function; it does not remove it."
     }
   ]
 }

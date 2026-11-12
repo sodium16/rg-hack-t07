@@ -441,7 +441,7 @@ def main(argv: list[str] | None = None) -> int:
     failed = failures + [
         key
         for key, payload in results.items()
-        if not (payload.get("passed") if key != "a2" else payload["summary"]["passed"])
+        if not (payload["summary"]["passed"] if "summary" in payload else payload.get("passed"))
     ]
     return 0 if results and not failed else 1
 

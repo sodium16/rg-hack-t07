@@ -83,7 +83,7 @@ class Settings:
     min_audio_seconds: int = 20
     speech_locale: str = "en-US"
     max_notes_words: int = 400
-    llm_max_tokens: int = 1600
+    llm_max_tokens: int = 4096
     key_term_attempts: int = 2
     definition_overlap_min: float = 0.50
     answer_grounding_min: float = 0.60
@@ -105,7 +105,7 @@ def load_settings() -> Settings:
         min_audio_seconds=20,
         speech_locale=_env_str("AZURE_SPEECH_LOCALE", "en-US"),
         max_notes_words=400,
-        llm_max_tokens=1600,
+        llm_max_tokens=4096,
         key_term_attempts=2,
         definition_overlap_min=0.50,
         answer_grounding_min=0.60,

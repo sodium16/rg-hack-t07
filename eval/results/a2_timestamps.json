@@ -1,0 +1,185 @@
+{
+  "rows": [
+    {
+      "id": "c01",
+      "question": "What are the two parts of every example in a supervised learning dataset?",
+      "covered": true,
+      "answer": "Every example in the dataset has two parts: the features, which are the measurable inputs such as house size or number of bedrooms, and the label, which is the true answer we want the model to predict, such as the CL price.",
+      "primary_timestamp_ms": 19710,
+      "gold_windows_ms": [
+        [
+          19710,
+          34200
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    },
+    {
+      "id": "c02",
+      "question": "What does a loss function output?",
+      "covered": true,
+      "answer": "A loss function outputs a single non-negative number representing the prediction error between the model's predicted value and the true label.",
+      "primary_timestamp_ms": 51280,
+      "gold_windows_ms": [
+        [
+          47040,
+          61610
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    },
+    {
+      "id": "c03",
+      "question": "How does mean squared error calculate the error?",
+      "covered": true,
+      "answer": "Mean squared error calculates the error by taking the difference between each predicted value and the actual value, squaring the difference so positive and negative errors do not cancel out, and then averaging those squared errors across all training examples.",
+      "primary_timestamp_ms": 66810,
+      "gold_windows_ms": [
+        [
+          61610,
+          81610
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    },
+    {
+      "id": "c04",
+      "question": "What direction does gradient descent move in?",
+      "covered": true,
+      "answer": "Gradient descent moves in the direction of the negative gradient, which is the direction that reduces the loss function the fastest. The gradient points in the direction of steepest increase of the loss function, so moving opposite to it decreases the loss.",
+      "primary_timestamp_ms": 122260,
+      "gold_windows_ms": [
+        [
+          118180,
+          165870
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    },
+    {
+      "id": "c05",
+      "question": "What does the learning rate control?",
+      "covered": true,
+      "answer": "The learning rate controls the size of the step taken during each weight update in gradient descent. It is a hyperparameter that requires careful balance because if it is too small, training becomes slow, and if it is too large, the updates can overshoot the minimum causing instability.",
+      "primary_timestamp_ms": 170030,
+      "gold_windows_ms": [
+        [
+          165870,
+          181000
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    },
+    {
+      "id": "c06",
+      "question": "What happens if the learning rate is too large?",
+      "covered": true,
+      "answer": "If the learning rate is too large, the updates can overshoot the minimum altogether, causing the loss to bounce wildly or even diverge to infinity.",
+      "primary_timestamp_ms": 190360,
+      "gold_windows_ms": [
+        [
+          189640,
+          198840
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    },
+    {
+      "id": "c07",
+      "question": "What is an epoch?",
+      "covered": true,
+      "answer": "An epoch is one full pass over the entire training dataset during model training. Models typically run for dozens of epochs, gradually lowering the training loss.",
+      "primary_timestamp_ms": 198840,
+      "gold_windows_ms": [
+        [
+          198840,
+          208470
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    },
+    {
+      "id": "c08",
+      "question": "What is overfitting?",
+      "covered": true,
+      "answer": "Overfitting occurs when a model memorizes noise and specific quirks in the training dataset instead of learning the underlying general pattern, causing it to score very well on training data but poorly on unseen data.",
+      "primary_timestamp_ms": 222710,
+      "gold_windows_ms": [
+        [
+          219430,
+          244550
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    },
+    {
+      "id": "c09",
+      "question": "What is a validation set used for?",
+      "covered": true,
+      "answer": "A validation set is a subset of labeled data held back from training and used solely to evaluate the model's generalization performance and tune hyperparameters like the learning rate. It helps detect overfitting early by monitoring if the validation loss starts rising while training loss keeps falling.",
+      "primary_timestamp_ms": 252230,
+      "gold_windows_ms": [
+        [
+          248790,
+          262240
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    },
+    {
+      "id": "c10",
+      "question": "How does regularization fight overfitting?",
+      "covered": true,
+      "answer": "Regularization fights overfitting by adding a penalty term to the loss function based on the size of the weights, which discourages the model from relying too heavily on any single feature. This penalty encourages simpler solutions that generalize better to real-world inputs.",
+      "primary_timestamp_ms": 274800,
+      "gold_windows_ms": [
+        [
+          271360,
+          293270
+        ]
+      ],
+      "within_5s": true,
+      "error_ms": 0,
+      "answer_correct": true,
+      "refusal_reason": null
+    }
+  ],
+  "summary": {
+    "questions": 10,
+    "answered": 10,
+    "within_5s": 10,
+    "within_5s_rate": 1.0,
+    "median_error_ms": 0,
+    "max_error_ms": 0,
+    "correct_answers": 10,
+    "model_claimed_covered_but_refused": 0,
+    "passed": true
+  }
+}
